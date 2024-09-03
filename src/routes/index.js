@@ -10,7 +10,8 @@ router.post('/res', (req, res) => {
   const date = req.body.date
   return res.json({
     email: email,
-    senha: password
+    senha: password,
+    date: date
   })
 })
 module.exports = router
