@@ -1,0 +1,11 @@
+{
+  "dialect": "postgres",
+  "host": "localhost",
+  "username": "root",
+  "password": "1587",
+  "database": "vish",
+  "define": {
+    "timestamps": true,
+    "underscored": true
+  }
+}
