@@ -25,7 +25,7 @@ module.exports = {
     const { id } = req.params
     const user = await User.findByPk(id)
 
-    return res.json(user.name)
+    return res.json(user)
   },
   async findByName(req, res) {
     const { name } = req.params
