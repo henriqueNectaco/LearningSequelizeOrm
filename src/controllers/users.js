@@ -20,5 +20,17 @@ module.exports = {
       console.error('Error creating user:', error); // Log do erro
       return res.status(400).json({ error: 'Erro ao criar usuário' }); // Resposta de erro
     }
+  },
+  async findById(req, res) {
+    const { id } = req.params
+    const user = await User.findByPk(id)
+
+    return res.json(user.name)
+  },
+  async findByName(req, res) {
+    const { name } = req.params
+    const user = await User.findAll({ where: { name } })
+
+    return res.json(user)
   }
 };
