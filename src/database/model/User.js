@@ -3,13 +3,22 @@ const { Model, DataTypes } = require('sequelize');
 class User extends Model {
   static init(sequelize) {
     super.init({
-      id: DataTypes.UUID,
       name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      age: DataTypes.INTEGER
+      email: DataTypes.STRING, id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4, // Gera automaticamente o UUID
+        allowNull: false,
+        primaryKey: true,
+      },
     }, {
       sequelize
     })
   }
+
+  static associate(models) {
+    this.hasMany(models.Address, { foreignKey: 'user_id', as: 'addresses' });
+    this.belongsToMany(models.Tech, { foreignKey: 'user_id', through: 'user_techs', as: 'techs' });
+  }
 }
-module.exports = User;  
+
+module.exports = User;

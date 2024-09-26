@@ -1,7 +1,24 @@
-const User = require('../database/model/User')
+const User = require('../database/model/User');
+
 module.exports = {
   async userList(req, res) {
-    const users = User.findAll()
-    return res.json(users)
+    try {
+      const users = await User.findAll(); // Busca todos os usuários
+      return res.json(users); // Retorna os usuários encontrados
+    } catch (error) {
+      console.error('Error fetching users:', error); // Log do erro
+      return res.status(500).json({ error: 'Erro ao buscar usuários' }); // Resposta de erro
+    }
+  },
+
+  async userCreate(req, res) {
+    try {
+      const { name, email } = req.body; // Extraindo os dados do corpo da requisição
+      const user = await User.create({ name, email }); // Criação do novo usuário
+      return res.status(201).json(user); // Retorna o usuário criado
+    } catch (error) {
+      console.error('Error creating user:', error); // Log do erro
+      return res.status(400).json({ error: 'Erro ao criar usuário' }); // Resposta de erro
+    }
   }
-}
+};
