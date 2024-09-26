@@ -1,17 +1,12 @@
 const express = require('express')
 const router = express.Router()
-router.get('/', (req, res) => {
-  return res.json({ hello: 'heloo' })
-})
+const UserController = require('../controllers/users')
+router.get('/users', UserController.userList)
+
 
 router.post('/res', (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-  const date = req.body.date
-  return res.json({
-    email: email,
-    senha: password,
-    date: date
-  })
+  const all = req.body
+  return res.json(
+    all)
 })
 module.exports = router

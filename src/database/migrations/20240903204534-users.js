@@ -5,9 +5,9 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.createTable('users', {
       id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: Sequelize.UUIDV4,
         allowNull: false
       },
       name: {
@@ -28,10 +28,7 @@ module.exports = {
       updated_at: {
         type: Sequelize.DATE,
         allowNull: false
-      }, Height: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      }
+      },
     })
     /**
      * Add altering commands here.
