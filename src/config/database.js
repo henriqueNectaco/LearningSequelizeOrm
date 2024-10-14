@@ -1,9 +1,10 @@
+require('dotenv').config();
 module.exports = {
   dialect: 'mysql',
-  host: 'localhost',
-  username: 'root',
-  password: '1587',
-  database: 'nodejs',
+  host: process.env.HOST,
+  username: process.env.DB_USER,
+  password: process.env.PASSWORD_DB,
+  database: process.env.DATABASE,
   define: {
     timestamps: true,
     underscored: true,

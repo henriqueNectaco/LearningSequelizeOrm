@@ -10,6 +10,7 @@ class User extends Model {
         allowNull: false,
         primaryKey: true,
       },
+      password:DataTypes.STRING,
     }, {
       sequelize
     })
