@@ -12,15 +12,13 @@ async loginn(req,res){
     async login(req, res) {
         const { email, password } = req.body;
 console.log(req.body)
-        // Encontre o usuário na base de dados
+        
         const user = await User.findOne({ where: { email, password } });
 
         if (user) {
-            // Crie o payload do token, você pode adicionar mais informações se precisar
-            const payload = { id: user.id, email: user.email };
+        const payload = { id: user.id, email: user.email };
 
-            // Gere o token
-            const token = jwt.sign(payload, secretKey, { expiresIn: '1h' }); // O token expira em 1 hora
+        const token = jwt.sign(payload, secretKey, { expiresIn: '1h' }); 
 
             return res.json({ success: true, user, token });
         } else {
@@ -42,8 +40,9 @@ console.log(req.body)
             const user = await User.findByPk(decoded.id);
 
             if (user) {
-                return res.json({ success: true, user });
-            } else {
+                return res.json({ success: true, user: { ...user.toJSON(), token } });
+            }
+            else {
                 return res.status(404).json({ message: "User not found" });
             }
         } catch (err) {

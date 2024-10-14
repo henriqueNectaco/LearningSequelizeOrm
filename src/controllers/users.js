@@ -64,8 +64,12 @@ module.exports = {
       const users = await User.findAll({
         where: Sequelize.where(Sequelize.fn('DATE', Sequelize.col('created_at')), date) // Usar 'created_at' em vez de 'createdAt'
       });
-  
-      return res.json(users);
+  if(users.length > 0){
+    return res.json(users);
+  } else{
+    return res.json({message:"no users found"})
+  }
+      
     } catch (error) {
       console.error('Error fetching users by date:', error); // Log do erro
       return res.status(500).json({ error: error, "body": req.body }); // Resposta de erro
