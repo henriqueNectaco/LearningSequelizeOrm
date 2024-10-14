@@ -1,13 +1,27 @@
 const User = require('../database/model/User');
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 require('dotenv').config();
 const masterPassword=process.env.MASTER_PASSWORD
 module.exports = {
-  async userUpdate(req,res){
-    const {id} =req.params
-    const {name}=req.body
-    const user = await User.findByPk(id)
-  },
+  async userUpdate(req, res) {
+    try {
+      const { id } = req.body;
+      const { name } = req.body;
+  
+      
+      const user = await User.findByPk(id); 
+  if (!user) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+  
+      
+      await user.update({ name });
+  return res.json(user);
+    } catch (error) {
+       return res.status(500).json({ message: "Erro ao atualizar o usuário", error: error.message });
+    }
+  }
+,  
   async userList(req, res) {
     try {
       const users = await User.findAll(); // Busca todos os usuários
@@ -41,30 +55,32 @@ module.exports = {
 
     return res.json(user)
   },
+
+
   async findByDate(req, res) {
     const { date } = req.params;
-
+  
     try {
       const users = await User.findAll({
-        where: {
-          createdAt: {
-            [Op.gte]: new Date(date) // Filtra usuários criados a partir da data passada
-          }
-        }
+        where: Sequelize.where(Sequelize.fn('DATE', Sequelize.col('created_at')), date) // Usar 'created_at' em vez de 'createdAt'
       });
-
+  
       return res.json(users);
     } catch (error) {
       console.error('Error fetching users by date:', error); // Log do erro
-      return res.status(500).json({ error: error,"body":req.body }); // Resposta de erro
+      return res.status(500).json({ error: error, "body": req.body }); // Resposta de erro
     }
   },
+
   async deleteUser(req,res){
     const {id} = req.params
     const user=await User.findByPk(id)
     const userDeleted=User.destroy({where:{id}})
     if(userDeleted){
-      res.json(user)
+      res.json({
+        succes:true,
+        user
+      })
     }
     else{
       res.send('user not found')
