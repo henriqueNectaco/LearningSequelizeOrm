@@ -27,28 +27,31 @@ console.log(req.body)
     },
     async verifyToken(req, res) {
         const { token } = req.body;
-
+    
         if (!token) {
             return res.status(400).json({ message: "Token not provided" });
         }
-
+    
         try {
             // Verifique e decodifique o token
             const decoded = jwt.verify(token, secretKey);
             
             // Procure o usuário no banco de dados usando o ID do token
             const user = await User.findByPk(decoded.id);
-
+    
             if (user) {
-                return res.json({ success: true, user: { ...user.toJSON(), token } });
-            }
-            else {
+                // Desestruture o objeto user para remover createdAt e updatedAt
+                const { createdAt, updatedAt, ...userData } = user.toJSON();
+                
+                return res.json({ success: true, user: { ...userData, token } });
+            } else {
                 return res.status(404).json({ message: "User not found" });
             }
         } catch (err) {
             return res.status(401).json({ message: "Invalid token" });
         }
-    },
+    }
+    
     
 
 };
