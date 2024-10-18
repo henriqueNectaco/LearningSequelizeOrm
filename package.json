@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js && sudo docker compose up -d",
-    "create": "sequelize db:create"
+    "create": "sequelize db:create",
+    "start": "concurrently \"nodemon src/server.js\" \"sudo docker compose up -d\""
+
   },
   "keywords": [],
   "author": "",
@@ -22,6 +24,7 @@
     "sequelize": "^5.19.6"
   },
   "devDependencies": {
+    "concurrently": "^9.0.1",
     "nodemon": "^3.1.4",
     "sequelize-cli": "^5.5.1"
   }
