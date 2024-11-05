@@ -7,4 +7,4 @@ app.use(express.urlencoded({ extended: true }))
 app.use(routes)
 app.listen(process.env.PORT)
 require('./database')
-
+require('./crons/index')

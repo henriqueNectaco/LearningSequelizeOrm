@@ -1,27 +1,27 @@
 const User = require('../database/model/User');
 const { Op, Sequelize } = require('sequelize');
 require('dotenv').config();
-const masterPassword=process.env.MASTER_PASSWORD
+const masterPassword = process.env.MASTER_PASSWORD
 module.exports = {
   async userUpdate(req, res) {
     try {
       const { id } = req.body;
       const { name } = req.body;
-  
-      
-      const user = await User.findByPk(id); 
-  if (!user) {
+
+
+      const user = await User.findByPk(id);
+      if (!user) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
-  
-      
+
+
       await user.update({ name });
-  return res.json(user);
+      return res.json(user);
     } catch (error) {
-       return res.status(500).json({ message: "Erro ao atualizar o usuário", error: error.message });
+      return res.status(500).json({ message: "Erro ao atualizar o usuário", error: error.message });
     }
   }
-,  
+  ,
   async userList(req, res) {
     try {
       const users = await User.findAll(); // Busca todos os usuários
@@ -35,8 +35,8 @@ module.exports = {
   async userCreate(req, res) {
     console.log(req.body)
     try {
-      const { name, email,password } = req.body; // Extraindo os dados do corpo da requisição
-      const user = await User.create({ name, email,password }); // Criação do novo usuário
+      const { name, email, password } = req.body; // Extraindo os dados do corpo da requisição
+      const user = await User.create({ name, email, password }); // Criação do novo usuário
       return res.status(201).json(user); // Retorna o usuário criado
     } catch (error) {
       console.error('Error creating user:', error); // Log do erro
@@ -59,58 +59,58 @@ module.exports = {
 
   async findByDate(req, res) {
     const { date } = req.params;
-  
+
     try {
       const users = await User.findAll({
         where: Sequelize.where(Sequelize.fn('DATE', Sequelize.col('created_at')), date) // Usar 'created_at' em vez de 'createdAt'
       });
-  if(users.length > 0){
-    return res.json(users);
-  } else{
-    return res.json({message:"no users found"})
-  }
-      
+      if (users.length > 0) {
+        return res.json(users);
+      } else {
+        return res.json({ message: "no users found" })
+      }
+
     } catch (error) {
       console.error('Error fetching users by date:', error); // Log do erro
       return res.status(500).json({ error: error, "body": req.body }); // Resposta de erro
     }
   },
 
-  async deleteUser(req,res){
-    const {id} = req.params
-    const user=await User.findByPk(id)
-    const userDeleted=User.destroy({where:{id}})
-    if(userDeleted){
+  async deleteUser(req, res) {
+    const { id } = req.params
+    const user = await User.findByPk(id)
+    const userDeleted = User.destroy({ where: { id } })
+    if (userDeleted) {
       res.json({
-        succes:true,
+        succes: true,
         user
       })
     }
-    else{
+    else {
       res.send('user not found')
     }
   },
   async userDeleteAll(req, res) {
-    const {accesPassword} =req.body
+    const { accesPassword } = req.body
     try {
-      if(accesPassword == masterPassword){
+      if (accesPassword == masterPassword) {
         const result = await User.destroy({
           where: {},
         })
         if (result === 0) {
           return res.status(404).json({ message: "Nenhum usuário encontrado para deletar." });
         }
-    
+
         return res.status(200).json({ message: `${result} usuário(s) deletado(s) com sucesso.` });
-      }else{return res.json({message:"sem Autorização"})}
-     ;
-  
+      } else { return res.json({ message: "sem Autorização" }) }
+      ;
+
       // Verifique se algum usuário foi deletado
-      
+
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Erro ao deletar usuários.", error: error.message });
     }
   }
-  
+
 };
